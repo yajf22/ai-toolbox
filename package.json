@@ -1,0 +1,25 @@
+{
+    "name": "work",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node server/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "dependencies": {
+        "axios": "^1.17.0",
+        "compression": "^1.8.1",
+        "cors": "^2.8.6",
+        "dotenv": "^17.4.2",
+        "elliptic": "^6.6.1",
+        "express": "^5.2.1",
+        "helmet": "^8.2.0"
+    },
+    "devDependencies": {
+        "vercel": "^54.12.2"
+    }
+}

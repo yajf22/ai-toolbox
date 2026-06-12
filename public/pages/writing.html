@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能写作 - AI工具箱</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .tool-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+        .tool-selector button { 
+            padding: 8px 20px; border: 2px solid var(--border); border-radius: 50px;
+            background: white; cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+        }
+        .tool-selector button.active {
+            border-color: var(--primary); background: var(--primary); color: white;
+        }
+        .result-actions { display: flex; gap: 12px; margin-top: 16px; }
+        .loader { text-align: center; padding: 40px; }
+        .loader::after { 
+            content: "⏳"; font-size: 2rem;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">✨ AI工具箱</a>
+            <div class="nav-status" id="navStatus">🔓 免费模式</div>
+        </div>
+    </nav>
+
+    <div class="tool-page">
+        <div class="tool-header">
+            <h1>✍️ AI智能写作</h1>
+            <p>选择写作类型，输入主题，AI自动生成高质量内容</p>
+        </div>
+
+        <div class="usage-counter" id="usageDisplay">今日免费使用：<span id="freeCount">3</span>/3 次</div>
+
+        <div class="tool-form">
+            <label>选择写作类型</label>
+            <div class="tool-selector" id="toolSelector"></div>
+
+            <label for="inputText">输入主题或要求</label>
+            <textarea id="inputText" rows="4" placeholder="请输入你想要的写作主题，例如：夏日护肤必备好物推荐"></textarea>
+
+            <div id="extraFields" style="display:none">
+                <label for="targetLang">目标语言</label>
+                <select id="targetLang">
+                    <option value="中文">中文</option>
+                    <option value="英文">English</option>
+                    <option value="日语">日本語</option>
+                    <option value="韩语">한국어</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="generate()" id="genBtn">🚀 生成内容</button>
+        </div>
+
+        <div id="loader" class="loader" style="display:none"></div>
+        <div id="result" class="tool-result" style="display:none"></div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        const TOOLS = {
+            'xiaohongshu': { name: '小红书文案', icon: '📕' },
+            'product-desc': { name: '电商产品描述', icon: '🏷️' },
+            'article': { name: '公众号文章', icon: '📰' },
+            'short-video': { name: '短视频脚本', icon: '🎬' },
+            'seo': { name: 'SEO优化文章', icon: '🔍' },
+            'translate': { name: '翻译', icon: '🌐' },
+            'custom': { name: '自由创作', icon: '✏️' }
+        };
+        let currentTool = 'xiaohongshu';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            const selector = document.getElementById('toolSelector');
+            Object.entries(TOOLS).forEach(([key, val]) => {
+                const btn = document.createElement('button');
+                btn.textContent = val.icon + ' ' + val.name;
+                btn.onclick = () => selectTool(key);
+                if (key === currentTool) btn.className = 'active';
+                selector.appendChild(btn);
+            });
+            updateFreeCount();
+        });
+
+        function selectTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.tool-selector button').forEach(b => b.className = '');
+            document.querySelectorAll('.tool-selector button')[Object.keys(TOOLS).indexOf(tool)].className = 'active';
+            document.getElementById('extraFields').style.display = tool === 'translate' ? 'block' : 'none';
+            updateFreeCount();
+        }
+
+        function updateFreeCount() {
+            if (state.isVIP) {
+                document.getElementById('freeCount').textContent = '∞';
+            } else {
+                document.getElementById('freeCount').textContent = getFreeUsesLeft('writing');
+            }
+        }
+
+        async function generate() {
+            const input = document.getElementById('inputText').value.trim();
+            if (!input) { alert('请输入主题或内容'); return; }
+
+            if (!checkFreeUse('writing')) return;
+
+            const btn = document.getElementById('genBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ 生成中...';
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+
+            try {
+                const body = {
+                    tool: currentTool,
+                    input: input,
+                    token: state.token || 'free_' + Date.now()
+                };
+                if (currentTool === 'translate') {
+                    body.targetLang = document.getElementById('targetLang').value;
+                }
+
+                const res = await fetch('/api/ai/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('result').textContent = data.content;
+                incrementFreeUse('writing');
+                updateFreeCount();
+
+            } catch(e) {
+                if (e.message.includes('Invalid token') || e.message.includes('expired')) {
+                    alert('VIP已过期，请重新购买');
+                    showPayment();
+                } else {
+                    document.getElementById('result').style.display = 'block';
+                    document.getElementById('result').textContent = '❌ 生成失败：' + e.message;
+                }
+            }
+
+            btn.disabled = false;
+            btn.textContent = '🚀 生成内容';
+            document.getElementById('loader').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

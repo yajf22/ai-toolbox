@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能工具箱 - AI写作/PDF/图片/Excel在线处理</title>
+    <meta name="description" content="免费的在线AI工具集：AI智能写作、PDF处理、图片处理、Excel批量处理。支持小红书文案、公众号文章、短视频脚本生成。">
+    <meta name="keywords" content="AI写作,在线PDF工具,图片处理,Excel处理,小红书文案,AI工具">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">✨ AI工具箱</a>
+            <div class="nav-links">
+                <a href="#tools">工具</a>
+                <a href="#pricing">价格</a>
+                <a href="#earnings" id="navEarnings">收益</a>
+            </div>
+            <div class="nav-status" id="navStatus">🔓 免费模式</div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>🚀 AI智能工具箱</h1>
+            <p class="subtitle">AI写作 · PDF处理 · 图片处理 · Excel批量 · 全部在线免费使用</p>
+            <div class="hero-actions">
+                <a href="#tools" class="btn btn-primary">开始使用</a>
+                <a href="#pricing" class="btn btn-outline">查看价格</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Token Status Bar -->
+    <section class="token-bar" id="tokenBar" style="display:none">
+        <div class="container">
+            <span>✅ VIP模式激活 - 无限使用所有工具</span>
+            <span id="tokenExpiry"></span>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="section">
+        <div class="container">
+            <h2>🛠️ 全部工具</h2>
+            <p class="section-desc">每个工具每天免费使用3次，付费后无限使用</p>
+            
+            <div class="tools-grid">
+                <!-- AI Writing Tools -->
+                <div class="tool-card">
+                    <div class="tool-icon">✍️</div>
+                    <h3>AI智能写作</h3>
+                    <p>小红书文案、公众号文章、短视频脚本、产品描述、SEO文章、翻译</p>
+                    <a href="/pages/writing.html" class="btn btn-small">打开 →</a>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">📄</div>
+                    <h3>PDF工具集</h3>
+                    <p>合并、拆分、压缩、格式转换、提取文字</p>
+                    <a href="/pages/pdf.html" class="btn btn-small">打开 →</a>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">🖼️</div>
+                    <h3>图片处理</h3>
+                    <p>批量压缩、格式转换、添加水印、调整尺寸</p>
+                    <a href="/pages/image.html" class="btn btn-small">打开 →</a>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">📊</div>
+                    <h3>Excel处理</h3>
+                    <p>合并工作表、数据清洗、格式转换、批量处理</p>
+                    <a href="/pages/excel.html" class="btn btn-small">打开 →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="section bg-light">
+        <div class="container">
+            <h2>💰 价格方案</h2>
+            <p class="section-desc">支持USDT (TRC-20) 付款，区块链实时到账</p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card free">
+                    <h3>🎁 免费</h3>
+                    <div class="price">¥0</div>
+                    <ul>
+                        <li>✅ 每天3次免费使用</li>
+                        <li>✅ AI写作基础功能</li>
+                        <li>✅ 基础PDF处理</li>
+                    </ul>
+                    <a href="#tools" class="btn btn-outline">开始免费使用</a>
+                </div>
+                
+                <div class="pricing-card premium featured">
+                    <div class="badge">推荐</div>
+                    <h3>⭐ VIP</h3>
+                    <div class="price">1 USDT <span>/ 天</span></div>
+                    <div class="price-rmb">≈ ¥7.3 / 天</div>
+                    <ul>
+                        <li>✅ 所有工具无限使用</li>
+                        <li>✅ AI写作全部模板</li>
+                        <li>✅ PDF/图片/Excel处理</li>
+                        <li>✅ 优先响应</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="showPayment()">立即购买</button>
+                </div>
+            </div>
+
+            <!-- Payment Modal -->
+            <div class="modal" id="paymentModal">
+                <div class="modal-content">
+                    <span class="close" onclick="closePayment()">&times;</span>
+                    <h3>💳 支付</h3>
+                    <div class="payment-info">
+                        <div class="qr-placeholder" id="qrDisplay">
+                            <div class="qr-icon">🏦</div>
+                        </div>
+                        <p class="payment-amount">金额：<strong>1 USDT</strong> (TRC-20)</p>
+                        <div class="wallet-address">
+                            <p>钱包地址：</p>
+                            <code id="walletAddress">加载中...</code>
+                            <button class="btn btn-small" onclick="copyAddress()">复制</button>
+                        </div>
+                        <div class="payment-steps">
+                            <p><strong>支付步骤：</strong></p>
+                            <ol>
+                                <li>打开你的USDT钱包（如币安、OKX、TokenPocket）</li>
+                                <li>选择TRC-20网络转账</li>
+                                <li>粘贴上方地址，金额输入 <strong>1 USDT</strong></li>
+                                <li>确认转账后，点击下方"验证支付"</li>
+                            </ol>
+                        </div>
+                        <button class="btn btn-primary" onclick="verifyPayment()">🔄 验证支付</button>
+                        <div id="paymentStatus" class="payment-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Earnings Section -->
+    <section id="earnings" class="section">
+        <div class="container">
+            <h2>📊 系统状态</h2>
+            <div class="earnings-grid" id="earningsDisplay">
+                <div class="stat-card">
+                    <div class="stat-label">钱包USDT</div>
+                    <div class="stat-value" id="statUSDT">加载中...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">折合RMB</div>
+                    <div class="stat-value" id="statRMB">加载中...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">总付费用户</div>
+                    <div class="stat-value" id="statUsers">加载中...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">DeepSeek调用</div>
+                    <div class="stat-value" id="statCalls">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>AI智能工具箱 &copy; 2026 | 基于 DeepSeek API | USDT (TRC-20) 支付</p>
+        </div>
+    </footer>
+
+    <!-- Token Management -->
+    <div id="tokenManager" style="display:none">
+        <input type="hidden" id="accessToken" value="">
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+﻿services:
+  - type: web
+    name: ai-toolbox
+    env: node
+    buildCommand: npm install
+    startCommand: node server/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: DEEPSEEK_API_KEY
+        sync: false
