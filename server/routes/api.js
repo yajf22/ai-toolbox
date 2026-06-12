@@ -1,6 +1,7 @@
 ﻿const express = require('express');
 const router = express.Router();
 const deepseek = require('../services/deepseek');
+const earnings = require('../services/earnings');
 const wallet = require('../services/wallet');
 const payment = require('../services/payment');
 const fs = require('fs');
@@ -147,19 +148,9 @@ router.get('/admin/usage', (req, res) => {
 
 // Earnings report
 router.get('/earnings', (req, res) => {
-    const earnings = payment.getEarnings();
-    const usage = deepseek.getUsage();
-    const walletBalance = { usdt: 0 }; // Will be updated on demand
-    res.json({
-        earnings,
-        deepseekUsage: usage,
-        profit: {
-            revenueUSDT: earnings.totalUSDT,
-            revenueRMB: earnings.estimatedRMB,
-            deepseekCostRMB: usage.estimatedCost.toFixed(4),
-            profitRMB: (earnings.estimatedRMB - usage.estimatedCost).toFixed(2)
-        }
-    });
+    const report = earnings.getEarningsReport();
+    res.json(report);
 });
 
 module.exports = router;
+

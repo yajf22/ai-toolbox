@@ -1,8 +1,35 @@
-﻿{
+{
   "createdAt": "",
   "walletAddress": "",
   "totalEarningsUSDT": 0,
   "totalEarningsRMB": 0,
   "payments": [],
-  "withdrawals": []
+  "withdrawals": [],
+  "current": {
+    "timestamp": "2026-06-12T07:39:14.928Z",
+    "walletAddress": "TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p",
+    "payments": {
+      "total": 0,
+      "totalUSDT": 0,
+      "totalRMB": 0
+    },
+    "deepseek": {
+      "totalCalls": 0,
+      "totalTokens": 0,
+      "estimatedCostRMB": 0
+    },
+    "profit": {
+      "revenueRMB": 0,
+      "costRMB": 0,
+      "netProfitRMB": 0
+    },
+    "lastUpdated": "2026-06-12T07:39:14.928Z"
+  },
+  "history": [
+    {
+      "time": "2026-06-12T07:39:14.928Z",
+      "totalUSDT": 0,
+      "totalRMB": 0
+    }
+  ]
 }

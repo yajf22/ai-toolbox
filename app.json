@@ -1,0 +1,13 @@
+﻿{
+  "name": "AI Toolbox",
+  "description": "AI智能工具箱 - AI写作/USDT收款/在线工具",
+  "repository": "https://github.com",
+  "logo": "https://raw.githubusercontent.com/your-repo/main/public/favicon.ico",
+  "keywords": ["ai", "tools", "writing", "deepseek", "tron", "usdt"],
+  "env": {
+    "DEEPSEEK_API_KEY": {
+      "description": "DeepSeek API Key",
+      "required": true
+    }
+  }
+}
