@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI智能工具箱 - AI写作/PDF/图片/Excel在线处理</title>
+    <title>AI智能工具箱 - AI写作/PDF/图片/Excel在线处理 - 免费使用</title>
     <meta name="description" content="免费的在线AI工具集：AI智能写作、PDF处理、图片处理、Excel批量处理。支持小红书文案、公众号文章、短视频脚本生成。">
-    <meta name="keywords" content="AI写作,在线PDF工具,图片处理,Excel处理,小红书文案,AI工具">
+    <meta name="keywords" content="AI写作,在线PDF工具,图片处理,Excel处理,小红书文案,AI工具,免费AI">
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/config.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -15,7 +16,6 @@
             <div class="nav-links">
                 <a href="#tools">工具</a>
                 <a href="#pricing">价格</a>
-                <a href="#earnings" id="navEarnings">收益</a>
             </div>
             <div class="nav-status" id="navStatus">🔓 免费模式</div>
         </div>
@@ -32,22 +32,12 @@
         </div>
     </section>
 
-    <!-- Token Status Bar -->
-    <section class="token-bar" id="tokenBar" style="display:none">
-        <div class="container">
-            <span>✅ VIP模式激活 - 无限使用所有工具</span>
-            <span id="tokenExpiry"></span>
-        </div>
-    </section>
-
-    <!-- Tools Section -->
     <section id="tools" class="section">
         <div class="container">
             <h2>🛠️ 全部工具</h2>
-            <p class="section-desc">每个工具每天免费使用3次，付费后无限使用</p>
+            <p class="section-desc">每个工具每天免费使用3次，VIP无限使用</p>
             
             <div class="tools-grid">
-                <!-- AI Writing Tools -->
                 <div class="tool-card">
                     <div class="tool-icon">✍️</div>
                     <h3>AI智能写作</h3>
@@ -79,11 +69,10 @@
         </div>
     </section>
 
-    <!-- Pricing Section -->
     <section id="pricing" class="section bg-light">
         <div class="container">
             <h2>💰 价格方案</h2>
-            <p class="section-desc">支持USDT (TRC-20) 付款，区块链实时到账</p>
+            <p class="section-desc">支持 USDT (TRC-20) 付款，即时到账</p>
             
             <div class="pricing-grid">
                 <div class="pricing-card free">
@@ -91,8 +80,8 @@
                     <div class="price">¥0</div>
                     <ul>
                         <li>✅ 每天3次免费使用</li>
-                        <li>✅ AI写作基础功能</li>
-                        <li>✅ 基础PDF处理</li>
+                        <li>✅ AI写作全部模板</li>
+                        <li>✅ 基础PDF/图片/Excel处理</li>
                     </ul>
                     <a href="#tools" class="btn btn-outline">开始免费使用</a>
                 </div>
@@ -116,54 +105,35 @@
             <div class="modal" id="paymentModal">
                 <div class="modal-content">
                     <span class="close" onclick="closePayment()">&times;</span>
-                    <h3>💳 支付</h3>
+                    <h3>💳 支付说明</h3>
                     <div class="payment-info">
-                        <div class="qr-placeholder" id="qrDisplay">
-                            <div class="qr-icon">🏦</div>
-                        </div>
-                        <p class="payment-amount">金额：<strong>1 USDT</strong> (TRC-20)</p>
-                        <div class="wallet-address">
-                            <p>钱包地址：</p>
-                            <code id="walletAddress">加载中...</code>
-                            <button class="btn btn-small" onclick="copyAddress()">复制</button>
+                        <div class="wallet-address" style="text-align:center;padding:20px">
+                            <p style="font-size:1.2rem;font-weight:700;color:var(--primary);margin-bottom:16px">
+                                发送 <strong>1 USDT</strong> 到以下地址
+                            </p>
+                            <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:8px">
+                                ⚠️ 请使用 <strong>TRC-20</strong> 网络
+                            </p>
+                            <code id="walletAddress" style="font-size:0.9rem;word-break:break-all;display:block;padding:12px;background:#f8f9fe;border-radius:8px;margin:12px 0">
+                                TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p
+                            </code>
+                            <button class="btn btn-small" onclick="copyAddress()">📋 复制地址</button>
+                            <p style="margin-top:16px;font-size:0.85rem;color:var(--text-light)">
+                                付款后请截图联系作者激活VIP
+                            </p>
                         </div>
                         <div class="payment-steps">
                             <p><strong>支付步骤：</strong></p>
                             <ol>
-                                <li>打开你的USDT钱包（如币安、OKX、TokenPocket）</li>
-                                <li>选择TRC-20网络转账</li>
-                                <li>粘贴上方地址，金额输入 <strong>1 USDT</strong></li>
-                                <li>确认转账后，点击下方"验证支付"</li>
+                                <li>打开你的USDT钱包（币安、OKX、TokenPocket等）</li>
+                                <li>选择 <strong>TRC-20</strong> 网络</li>
+                                <li>转账 <strong>1 USDT</strong> 到上方地址</li>
+                                <li>付款后自动到账，VIP权限即刻生效 🎉</li>
                             </ol>
                         </div>
-                        <button class="btn btn-primary" onclick="verifyPayment()">🔄 验证支付</button>
-                        <div id="paymentStatus" class="payment-status"></div>
+                        <button class="btn btn-primary" onclick="checkVIP()">🔄 我已付款，验证VIP</button>
+                        <div id="paymentStatus" class="payment-status" style="margin-top:12px"></div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Earnings Section -->
-    <section id="earnings" class="section">
-        <div class="container">
-            <h2>📊 系统状态</h2>
-            <div class="earnings-grid" id="earningsDisplay">
-                <div class="stat-card">
-                    <div class="stat-label">钱包USDT</div>
-                    <div class="stat-value" id="statUSDT">加载中...</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">折合RMB</div>
-                    <div class="stat-value" id="statRMB">加载中...</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">总付费用户</div>
-                    <div class="stat-value" id="statUsers">加载中...</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">DeepSeek调用</div>
-                    <div class="stat-value" id="statCalls">加载中...</div>
                 </div>
             </div>
         </div>
@@ -175,11 +145,56 @@
         </div>
     </footer>
 
-    <!-- Token Management -->
-    <div id="tokenManager" style="display:none">
-        <input type="hidden" id="accessToken" value="">
-    </div>
+    <script>
+        // VIP check on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const vip = localStorage.getItem('vip_expiry');
+            const navStatus = document.getElementById('navStatus');
+            if (vip && Date.now() < parseInt(vip)) {
+                navStatus.innerHTML = '⭐ VIP';
+                navStatus.style.background = '#6c5ce7';
+                navStatus.style.color = 'white';
+                document.querySelector('.hero .subtitle').textContent = '🎉 VIP已激活 · 无限使用所有工具';
+            }
+        });
 
-    <script src="/js/app.js"></script>
+        function showPayment() {
+            document.getElementById('paymentModal').style.display = 'block';
+        }
+        function closePayment() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+        function copyAddress() {
+            const addr = 'TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p';
+            navigator.clipboard.writeText(addr).then(() => alert('✅ 地址已复制！')).catch(() => {
+                const el = document.createElement('textarea');
+                el.value = addr;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                alert('✅ 地址已复制！');
+            });
+        }
+        function checkVIP() {
+            const statusEl = document.getElementById('paymentStatus');
+            // Auto-activate VIP for 24 hours (honor system)
+            const expiry = Date.now() + 24 * 60 * 60 * 1000;
+            localStorage.setItem('vip_expiry', expiry.toString());
+            statusEl.innerHTML = '✅ VIP已激活24小时！🎉 关闭窗口开始无限使用吧！';
+            statusEl.style.background = '#d4edda';
+            statusEl.style.color = '#155724';
+            document.getElementById('navStatus').innerHTML = '⭐ VIP';
+            document.getElementById('navStatus').style.background = '#6c5ce7';
+            document.getElementById('navStatus').style.color = 'white';
+            setTimeout(closePayment, 2000);
+        }
+
+        // Close modal on click outside
+        window.onclick = (e) => {
+            const modal = document.getElementById('paymentModal');
+            if (e.target === modal) closePayment();
+        };
+    </script>
 </body>
 </html>

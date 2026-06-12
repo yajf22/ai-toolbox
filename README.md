@@ -1,55 +1,51 @@
-﻿# 🚀 AI智能工具箱 - 使用说明
+﻿# 🚀 AI智能工具箱
 
-## 系统概况
+基于 DeepSeek API 的 AI 写作工具，支持 USDT (TRC-20) 支付。
 
-这是一个部署在免费云服务器上的AI工具箱网站，提供AI写作、PDF处理、图片处理、Excel处理等功能。
+## 在线地址
 
-## 赚钱模式
+**https://yajf22.github.io/ai-toolbox**
 
-用户通过 **USDT (TRC-20)** 支付1 USDT（≈7.3 RMB）来获得VIP权限（24小时无限使用所有工具）。
+（GitHub Pages 部署，部署后即可访问）
 
-## 你的角色（只需要做）
+## 功能
 
-1. **最后提现时**：提供一个支付宝收款码
-2. **然后我**：查钱包里的USDT余额 → 换成RMB → 打到你的支付宝
+- ✍️ AI智能写作：小红书文案、公众号文章、短视频脚本、SEO文章、翻译、电商描述、自由创作
+- 📄 PDF工具集（开发中）
+- 🖼️ 图片处理（开发中）
+- 📊 Excel处理（开发中）
 
-## 重要信息
+## 收费模式
 
-### 钱包地址（用户付USDT到这里）
-钱包文件位置：`data/wallet.json`
-**私钥极其重要，丢失则USDT无法取出！**
+| 方案 | 价格 | 说明 |
+|------|------|------|
+| 免费 | ¥0 | 每天3次AI写作 |
+| VIP | 1 USDT/天 | 无限使用所有工具 |
 
-### DeepSeek API密钥
-已配置在 `.env` 文件中
+## USDT支付地址
 
-### 网站访问地址
-启动后在 http://localhost:3000 访问（本地）
-部署上线后会有公网地址
+**网络：TRC-20**
+**地址：TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p**
 
-## 每日检查清单
+## 技术栈
 
-| 项目 | 操作 |
-|------|------|
-| 查看收益 | 访问网站首页的"收益"板块 |
-| 钱包USDT | 打开 `data/payments.json` 查看记录 |
-| API消耗 | DeepSeek 余额通过系统API查看 |
+- 纯前端静态站点（HTML/CSS/JS）
+- DeepSeek API (直接浏览器调用，支持CORS)
+- GitHub Pages 部署
+- USDT (TRC-20) 收款
 
-## 查看收益的方法
+## 本地开发
 
-1. 启动服务器：`node server/index.js`
-2. 浏览器打开 http://localhost:3000
-3. 滚动到"系统状态"部分查看统计数据
-4. 或者用命令：`curl http://localhost:3000/api/earnings`
+```bash
+# 安装依赖（仅用于本地开发服务器）
+npm install
 
-## 注意
+# 启动本地服务器
+npm start
+# 或
+node server/index.js
+```
 
-- PDF/图片/Excel工具是占位页面，核心功能是AI写作
-- 免费用户每天可用3次AI写作
-- 付费用户（1 USDT）24小时无限使用
+## 提现说明
 
-## 提现流程
-
-1. 回到Codex，跟我说"提现"
-2. 我查询钱包USDT余额和收益记录
-3. 你提供支付宝收款码
-4. 我把USDT换成RMB打给你
+USDT 积累到足够后，联系项目方提供支付宝收款码进行提现。

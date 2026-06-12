@@ -11,16 +11,15 @@
             padding: 8px 20px; border: 2px solid var(--border); border-radius: 50px;
             background: white; cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
         }
-        .tool-selector button.active {
-            border-color: var(--primary); background: var(--primary); color: white;
-        }
+        .tool-selector button.active { border-color: var(--primary); background: var(--primary); color: white; }
         .result-actions { display: flex; gap: 12px; margin-top: 16px; }
         .loader { text-align: center; padding: 40px; }
         .loader::after { 
-            content: "⏳"; font-size: 2rem;
+            content: "⏳ AI 生成中..."; font-size: 1.2rem;
             animation: pulse 1s infinite;
         }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .warning { background: #fff3cd; border: 1px solid #ffc107; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -35,6 +34,12 @@
         <div class="tool-header">
             <h1>✍️ AI智能写作</h1>
             <p>选择写作类型，输入主题，AI自动生成高质量内容</p>
+        </div>
+
+        <div class="warning">
+            ⚡ 当前为 <strong>GitHub Pages</strong> 版本，AI调用直接从你的浏览器到 DeepSeek API。
+            免费用户每天可用3次，VIP用户无限使用。<br>
+            <strong>VIP购买：</strong>发送 <strong>1 USDT (TRC-20)</strong> 到 <code>TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p</code>，联系作者激活。
         </div>
 
         <div class="usage-counter" id="usageDisplay">今日免费使用：<span id="freeCount">3</span>/3 次</div>
@@ -53,6 +58,7 @@
                     <option value="英文">English</option>
                     <option value="日语">日本語</option>
                     <option value="韩语">한국어</option>
+                    <option value="法语">Français</option>
                 </select>
             </div>
 
@@ -63,8 +69,39 @@
         <div id="result" class="tool-result" style="display:none"></div>
     </div>
 
-    <script src="/js/app.js"></script>
+    <script src="/js/config.js"></script>
     <script>
+        const PROMPTS = {
+            xiaohongshu: (topic) => [
+                { role: "system", content: "你是一个小红书爆款文案写作专家。写一篇吸引人的小红书风格笔记，包含：吸引眼球的标题、emoji表情、分段清晰的内容、相关标签。语言活泼亲切。" },
+                { role: "user", content: `请写一篇关于"${topic}"的小红书笔记` }
+            ],
+            "product-desc": (product) => [
+                { role: "system", content: "你是一个电商文案专家。写产品描述要突出卖点、解决用户痛点、包含使用场景。" },
+                { role: "user", content: `请为"${product}"写一段电商产品描述` }
+            ],
+            article: (topic) => [
+                { role: "system", content: "你是一个专业文章写手。写一篇结构清晰、内容充实的公众号风格文章。" },
+                { role: "user", content: `请写一篇关于"${topic}"的公众号文章` }
+            ],
+            "short-video": (topic) => [
+                { role: "system", content: "你是一个短视频脚本专家。写15-60秒的短视频脚本，包含开场hook、主要内容、结尾引导互动。" },
+                { role: "user", content: `请写一个关于"${topic}"的短视频脚本` }
+            ],
+            seo: (keyword) => [
+                { role: "system", content: "你是一个SEO内容专家。写一篇搜索引擎优化的文章，自然融入关键词，结构清晰。" },
+                { role: "user", content: `请写一篇围绕关键词"${keyword}"的SEO优化文章` }
+            ],
+            translate: (text, lang) => [
+                { role: "system", content: `你是一个专业翻译。将文本翻译成${lang}，保持原意和语气，自然流畅。` },
+                { role: "user", content: text }
+            ],
+            custom: (prompt) => [
+                { role: "system", content: "你是一个AI助手，请根据用户的要求完成创作。" },
+                { role: "user", content: prompt }
+            ]
+        };
+
         const TOOLS = {
             'xiaohongshu': { name: '小红书文案', icon: '📕' },
             'product-desc': { name: '电商产品描述', icon: '🏷️' },
@@ -97,19 +134,41 @@
             updateFreeCount();
         }
 
-        function updateFreeCount() {
-            if (state.isVIP) {
-                document.getElementById('freeCount').textContent = '∞';
+        function updateUI() {
+            const vip = localStorage.getItem('vip_expiry');
+            const navStatus = document.getElementById('navStatus');
+            if (vip && Date.now() < parseInt(vip)) {
+                navStatus.innerHTML = '⭐ VIP';
+                navStatus.style.background = '#6c5ce7';
+                navStatus.style.color = 'white';
+                window.isVIP = true;
             } else {
-                document.getElementById('freeCount').textContent = getFreeUsesLeft('writing');
+                navStatus.innerHTML = '🔓 免费模式';
+                navStatus.style.background = '#f0f0f0';
+                navStatus.style.color = '';
+                window.isVIP = false;
             }
+            updateFreeCount();
+        }
+
+        function updateFreeCount() {
+            const el = document.getElementById('freeCount');
+            if (window.isVIP) { el.textContent = '∞'; return; }
+            const today = new Date().toDateString();
+            const uses = parseInt(localStorage.getItem('free_use_writing_' + today) || '0');
+            el.textContent = Math.max(0, 3 - uses);
         }
 
         async function generate() {
             const input = document.getElementById('inputText').value.trim();
             if (!input) { alert('请输入主题或内容'); return; }
 
-            if (!checkFreeUse('writing')) return;
+            const today = new Date().toDateString();
+            const uses = parseInt(localStorage.getItem('free_use_writing_' + today) || '0');
+            if (!window.isVIP && uses >= 3) {
+                alert('今日免费次数已用完（3/3）。VIP无限使用！\n\n购买VIP：\n发送 1 USDT (TRC-20)\n到地址: TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p');
+                return;
+            }
 
             const btn = document.getElementById('genBtn');
             btn.disabled = true;
@@ -118,39 +177,42 @@
             document.getElementById('result').style.display = 'none';
 
             try {
-                const body = {
-                    tool: currentTool,
-                    input: input,
-                    token: state.token || 'free_' + Date.now()
-                };
+                let messages;
                 if (currentTool === 'translate') {
-                    body.targetLang = document.getElementById('targetLang').value;
+                    const lang = document.getElementById('targetLang').value;
+                    messages = PROMPTS[currentTool](input, lang);
+                } else {
+                    messages = PROMPTS[currentTool](input);
                 }
 
-                const res = await fetch('/api/ai/generate', {
+                const res = await fetch('https://api.deepseek.com/chat/completions', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + DEEPSEEK_CONFIG.apiKey
+                    },
+                    body: JSON.stringify({
+                        model: DEEPSEEK_CONFIG.model,
+                        messages: messages,
+                        max_tokens: 4096,
+                        temperature: 0.7
+                    })
                 });
-                const data = await res.json();
 
-                if (data.error) {
-                    throw new Error(data.error);
-                }
+                const data = await res.json();
+                if (data.error) throw new Error(data.error.message);
 
                 document.getElementById('result').style.display = 'block';
-                document.getElementById('result').textContent = data.content;
-                incrementFreeUse('writing');
-                updateFreeCount();
+                document.getElementById('result').textContent = data.choices[0].message.content;
+
+                if (!window.isVIP) {
+                    localStorage.setItem('free_use_writing_' + today, (uses + 1).toString());
+                    updateFreeCount();
+                }
 
             } catch(e) {
-                if (e.message.includes('Invalid token') || e.message.includes('expired')) {
-                    alert('VIP已过期，请重新购买');
-                    showPayment();
-                } else {
-                    document.getElementById('result').style.display = 'block';
-                    document.getElementById('result').textContent = '❌ 生成失败：' + e.message;
-                }
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('result').textContent = '❌ 生成失败：' + e.message;
             }
 
             btn.disabled = false;
