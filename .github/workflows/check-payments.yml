@@ -1,0 +1,37 @@
+﻿name: Auto Check Payments
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # 每10分钟跑一次
+  workflow_dispatch:          # 也可以手动触发
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install axios
+        
+      - name: Check payments
+        run: node auto-check-payments.js
+      
+      - name: Commit results
+        run: |
+          git config user.name "Payment Bot"
+          git config user.email "bot@ai-toolbox"
+          git add data/payment-records.json
+          git diff --staged --quiet || git commit -m "Auto-update payment records"
+          git push
