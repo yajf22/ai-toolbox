@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -131,7 +131,7 @@
                                 <li>付款后自动到账，VIP权限即刻生效 🎉</li>
                             </ol>
                         </div>
-                        <button class="btn btn-primary" onclick="checkVIP()">🔄 我已付款，验证VIP</button>
+                        <button class="btn btn-primary" onclick="checkVIP()">🔄 🔄 我已付款，验证VIP</button>
                         <div id="paymentStatus" class="payment-status" style="margin-top:12px"></div>
                     </div>
                 </div>
@@ -176,18 +176,54 @@
                 alert('✅ 地址已复制！');
             });
         }
-        function checkVIP() {
+        async function checkVIP() {
             const statusEl = document.getElementById('paymentStatus');
-            // Auto-activate VIP for 24 hours (honor system)
-            const expiry = Date.now() + 24 * 60 * 60 * 1000;
-            localStorage.setItem('vip_expiry', expiry.toString());
-            statusEl.innerHTML = '✅ VIP已激活24小时！🎉 关闭窗口开始无限使用吧！';
-            statusEl.style.background = '#d4edda';
-            statusEl.style.color = '#155724';
-            document.getElementById('navStatus').innerHTML = '⭐ VIP';
-            document.getElementById('navStatus').style.background = '#6c5ce7';
-            document.getElementById('navStatus').style.color = 'white';
-            setTimeout(closePayment, 2000);
+            statusEl.innerHTML = '🔄 正在检查区块链...';
+            statusEl.style.background = '#fff3cd';
+            statusEl.style.color = '#856404';
+            
+            const walletAddr = 'TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p';
+            const usdtContract = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
+            
+            try {
+                // Call TRON API to check USDT balance
+                const tronRes = await fetch('https://api.trongrid.io/v1/accounts/' + walletAddr);
+                const tronData = await tronRes.json();
+                
+                // Check TRC-20 tokens (USDT)
+                let usdtBalance = 0;
+                const tokens = tronData.data?.[0]?.trc20 || [];
+                for (const tok of tokens) {
+                    if (tok[usdtContract]) {
+                        usdtBalance = parseInt(tok[usdtContract]) / 1000000;
+                    }
+                }
+                
+                if (usdtBalance >= 1) {
+                    // Calculate VIP duration based on USDT amount
+                    const days = Math.floor(usdtBalance);
+                    const expiry = Date.now() + days * 24 * 60 * 60 * 1000;
+                    const storedExpiry = parseInt(localStorage.getItem('vip_expiry') || '0');
+                    const newExpiry = Math.max(expiry, storedExpiry);
+                    localStorage.setItem('vip_expiry', newExpiry.toString());
+                    
+                    statusEl.innerHTML = '✅ 检测到 ' + usdtBalance + ' USDT！VIP激活' + days + '天 🎉';
+                    statusEl.style.background = '#d4edda';
+                    statusEl.style.color = '#155724';
+                    document.getElementById('navStatus').innerHTML = '⭐ VIP';
+                    document.getElementById('navStatus').style.background = '#6c5ce7';
+                    document.getElementById('navStatus').style.color = 'white';
+                    setTimeout(closePayment, 2000);
+                } else {
+                    statusEl.innerHTML = '⏳ 尚未检测到USDT到账。<br>请确认已转账到：<br><code style="word-break:break-all">' + walletAddr + '</code><br>网络：<strong>TRC-20</strong><br>金额：<strong>1 USDT</strong><br><br>⏱ 转账后约1-2分钟到账，点击下方重新验证：<br><button class="btn btn-small" onclick="checkVIP()" style="margin-top:8px;background:var(--primary);color:white;border:none">🔄 重新验证</button>';
+                    statusEl.style.background = '#fff3cd';
+                    statusEl.style.color = '#856404';
+                }
+            } catch(e) {
+                statusEl.innerHTML = '❌ 验证失败，请稍后再试：' + e.message;
+                statusEl.style.background = '#f8d7da';
+                statusEl.style.color = '#721c24';
+            }
         }
 
         // Close modal on click outside
