@@ -3,3 +3,5 @@
 .DS_Store
 # 注意：wallet.json不上传到git，部署后需要单独复制
 data/wallet.json
+
+!public/data/

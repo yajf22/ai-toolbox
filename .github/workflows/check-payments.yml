@@ -2,8 +2,8 @@
 
 on:
   schedule:
-    - cron: '*/10 * * * *'   # 每10分钟跑一次
-  workflow_dispatch:          # 也可以手动触发
+    - cron: '*/10 * * * *'   # 每10分钟检查支付
+  workflow_dispatch:
 
 jobs:
   check:
@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
       
       - name: Install dependencies
         run: |
@@ -28,10 +27,17 @@ jobs:
       - name: Check payments
         run: node auto-check-payments.js
       
+      - name: Check DeepSeek balance (every 6 hours)
+        run: |
+          HOUR=$(date +%H)
+          if [ $((10#$HOUR % 6)) -eq 0 ]; then
+            node auto-check-balance.js
+          fi
+      
       - name: Commit results
         run: |
-          git config user.name "Payment Bot"
+          git config user.name "System Bot"
           git config user.email "bot@ai-toolbox"
-          git add data/payment-records.json
-          git diff --staged --quiet || git commit -m "Auto-update payment records"
+          git add data/ public/data/
+          git diff --staged --quiet || git commit -m "Auto-update system records [skip ci]"
           git push
