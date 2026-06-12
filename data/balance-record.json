@@ -3,8 +3,12 @@
     {
       "time": "2026-06-12T12:55:34.457Z",
       "balance": 24.53
+    },
+    {
+      "time": "2026-06-12T18:24:04.450Z",
+      "balance": 17.14
     }
   ],
-  "currentBalance": 24.53,
-  "lastChecked": "2026-06-12T12:55:34.457Z"
+  "currentBalance": 17.14,
+  "lastChecked": "2026-06-12T18:24:04.450Z"
 }
