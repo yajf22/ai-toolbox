@@ -14,6 +14,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: Inject API key
+        run: |
+          node -e "
+          const fs = require('fs');
+          let config = fs.readFileSync('public/js/config.js', 'utf8');
+          config = config.replace('DEEPSEEK_API_KEY_PLACEHOLDER', process.env.DS_KEY);
+          fs.writeFileSync('public/js/config.js', config);
+          "
+        env:
+          DS_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:

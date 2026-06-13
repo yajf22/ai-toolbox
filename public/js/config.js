@@ -1,8 +1,7 @@
 ﻿// ====== DeepSeek API Configuration ======
-// 注意: API密钥已移除，请通过后端代理调用
-// 如要本地开发，请在 config.local.js 中配置
+// 密钥在部署时自动注入，不存储在代码中
 const DEEPSEEK_CONFIG = {
-    apiKey: "API_KEY_REMOVED_PLEASE_USE_PROXY",
+    apiKey: "DEEPSEEK_API_KEY_PLACEHOLDER",
     model: "deepseek-chat",
     apiUrl: "https://api.deepseek.com/chat/completions"
 };
