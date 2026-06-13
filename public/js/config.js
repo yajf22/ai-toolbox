@@ -1,9 +1,10 @@
 ﻿// ====== DeepSeek API Configuration ======
-// 密钥在部署时自动注入，不存储在代码中
+// API密钥在后端代理服务器上，不暴露给浏览器
 const DEEPSEEK_CONFIG = {
-    apiKey: "DEEPSEEK_API_KEY_PLACEHOLDER",
+    apiKey: "USE_PROXY",
     model: "deepseek-chat",
-    apiUrl: "https://api.deepseek.com/chat/completions"
+    apiUrl: "https://api.deepseek.com/chat/completions",
+    proxyUrl: "PROXY_URL_PLACEHOLDER"
 };
 
 // ====== Wallet & Payment Info ======
