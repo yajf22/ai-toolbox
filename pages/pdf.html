@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF工具集 - AI工具箱</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">✨ AI工具箱</a>
+            <div class="nav-status" id="navStatus">🔓 免费模式</div>
+        </div>
+    </nav>
+    <div class="tool-page">
+        <div class="tool-header">
+            <h1>📄 PDF工具集</h1>
+            <p>在线处理PDF文件</p>
+        </div>
+        <div class="tools-grid" style="margin-top:40px">
+            <div class="tool-card"><div class="tool-icon">🔗</div><h3>PDF合并</h3><p>合并多个PDF</p></div>
+            <div class="tool-card"><div class="tool-icon">✂️</div><h3>PDF拆分</h3><p>拆分PDF文件</p></div>
+            <div class="tool-card"><div class="tool-icon">📏</div><h3>PDF压缩</h3><p>压缩PDF大小</p></div>
+            <div class="tool-card"><div class="tool-icon">🔄</div><h3>PDF转Word</h3><p>转换格式</p></div>
+        </div>
+        <div style="text-align:center;margin-top:60px;padding:40px;background:#f8f9fe;border-radius:16px">
+            <h3>🔧 开发中</h3>
+            <p style="color:var(--text-light);margin-top:12px">PDF功能即将上线！先试试 <a href="/pages/writing.html">AI智能写作</a></p>
+        </div>
+    </div>
+    <script src="/js/config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const vip = localStorage.getItem('vip_expiry');
+            const s = document.getElementById('navStatus');
+            if (vip && Date.now() < parseInt(vip)) { s.innerHTML = '⭐ VIP'; s.style.background = '#6c5ce7'; s.style.color = 'white'; }
+        });
+    </script>
+</body>
+</html>

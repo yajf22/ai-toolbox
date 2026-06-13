@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片处理 - AI工具箱</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">✨ AI工具箱</a>
+            <div class="nav-status" id="navStatus">🔓 免费模式</div>
+        </div>
+    </nav>
+    <div class="tool-page">
+        <div class="tool-header">
+            <h1>🖼️ 图片处理</h1>
+            <p>在线处理图片</p>
+        </div>
+        <div class="tools-grid" style="margin-top:40px">
+            <div class="tool-card"><div class="tool-icon">📦</div><h3>图片压缩</h3><p>批量压缩图片</p></div>
+            <div class="tool-card"><div class="tool-icon">🔄</div><h3>格式转换</h3><p>PNG/JPG/WebP互转</p></div>
+            <div class="tool-card"><div class="tool-icon">💧</div><h3>添加水印</h3><p>批量加水印</p></div>
+            <div class="tool-card"><div class="tool-icon">📐</div><h3>调整尺寸</h3><p>批量调整尺寸</p></div>
+        </div>
+        <div style="text-align:center;margin-top:60px;padding:40px;background:#f8f9fe;border-radius:16px">
+            <h3>🔧 开发中</h3>
+            <p style="color:var(--text-light);margin-top:12px">图片功能即将上线！先试试 <a href="/pages/writing.html">AI智能写作</a></p>
+        </div>
+    </div>
+    <script src="/js/config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const vip = localStorage.getItem('vip_expiry');
+            const s = document.getElementById('navStatus');
+            if (vip && Date.now() < parseInt(vip)) { s.innerHTML = '⭐ VIP'; s.style.background = '#6c5ce7'; s.style.color = 'white'; }
+        });
+    </script>
+</body>
+</html>
