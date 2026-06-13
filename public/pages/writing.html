@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI智能写作 - AI工具箱</title>
+    <title>AI鏅鸿兘鍐欎綔 - AI宸ュ叿绠?/title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
         .tool-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
@@ -15,7 +15,7 @@
         .result-actions { display: flex; gap: 12px; margin-top: 16px; }
         .loader { text-align: center; padding: 40px; }
         .loader::after { 
-            content: "⏳ AI 生成中..."; font-size: 1.2rem;
+            content: "鈴?AI 鐢熸垚涓?.."; font-size: 1.2rem;
             animation: pulse 1s infinite;
         }
         @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
@@ -25,44 +25,42 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="/" class="logo">✨ AI工具箱</a>
-            <div class="nav-status" id="navStatus">🔓 免费模式</div>
+            <a href="/" class="logo">鉁?AI宸ュ叿绠?/a>
+            <div class="nav-status" id="navStatus">馃敁 鍏嶈垂妯″紡</div>
         </div>
     </nav>
 
     <div class="tool-page">
         <div class="tool-header">
-            <h1>✍️ AI智能写作</h1>
-            <p>选择写作类型，输入主题，AI自动生成高质量内容</p>
+            <h1>鉁嶏笍 AI鏅鸿兘鍐欎綔</h1>
+            <p>閫夋嫨鍐欎綔绫诲瀷锛岃緭鍏ヤ富棰橈紝AI鑷姩鐢熸垚楂樿川閲忓唴瀹?/p>
         </div>
 
         <div class="warning">
-            ⚡ 当前为 <strong>GitHub Pages</strong> 版本，AI调用直接从你的浏览器到 DeepSeek API。
-            免费用户每天可用3次，VIP用户无限使用。<br>
-            <strong>VIP购买：</strong>发送 <strong>1 USDT (TRC-20)</strong> 到 <code>TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p</code>，联系作者激活。
-        </div>
+            鈿?褰撳墠涓?<strong>GitHub Pages</strong> 鐗堟湰锛孉I璋冪敤鐩存帴浠庝綘鐨勬祻瑙堝櫒鍒?DeepSeek API銆?            鍏嶈垂鐢ㄦ埛姣忓ぉ鍙敤3娆★紝VIP鐢ㄦ埛鏃犻檺浣跨敤銆?br>
+            <strong>VIP璐拱锛?/strong>鍙戦€?<strong>1 USDT (TRC-20)</strong> 鍒?<code>TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p</code>锛岃仈绯讳綔鑰呮縺娲汇€?        </div>
 
-        <div class="usage-counter" id="usageDisplay">今日免费使用：<span id="freeCount">3</span>/3 次</div>
+        <div class="usage-counter" id="usageDisplay">浠婃棩鍏嶈垂浣跨敤锛?span id="freeCount">3</span>/3 娆?/div>
 
         <div class="tool-form">
-            <label>选择写作类型</label>
+            <label>閫夋嫨鍐欎綔绫诲瀷</label>
             <div class="tool-selector" id="toolSelector"></div>
 
-            <label for="inputText">输入主题或要求</label>
-            <textarea id="inputText" rows="4" placeholder="请输入你想要的写作主题，例如：夏日护肤必备好物推荐"></textarea>
+            <label for="inputText">杈撳叆涓婚鎴栬姹?/label>
+            <textarea id="inputText" rows="4" placeholder="璇疯緭鍏ヤ綘鎯宠鐨勫啓浣滀富棰橈紝渚嬪锛氬鏃ユ姢鑲ゅ繀澶囧ソ鐗╂帹鑽?></textarea>
 
             <div id="extraFields" style="display:none">
-                <label for="targetLang">目标语言</label>
+                <label for="targetLang">鐩爣璇█</label>
                 <select id="targetLang">
-                    <option value="中文">中文</option>
-                    <option value="英文">English</option>
-                    <option value="日语">日本語</option>
-                    <option value="韩语">한국어</option>
-                    <option value="法语">Français</option>
+                    <option value="涓枃">涓枃</option>
+                    <option value="鑻辨枃">English</option>
+                    <option value="鏃ヨ">鏃ユ湰瑾?/option>
+                    <option value="闊╄">頃滉淡鞏?/option>
+                    <option value="娉曡">Fran莽ais</option>
                 </select>
             </div>
 
-            <button class="btn btn-primary" onclick="generate()" id="genBtn">🚀 生成内容</button>
+            <button class="btn btn-primary" onclick="generate()" id="genBtn">馃殌 鐢熸垚鍐呭</button>
         </div>
 
         <div id="loader" class="loader" style="display:none"></div>
@@ -73,43 +71,43 @@
     <script>
         const PROMPTS = {
             xiaohongshu: (topic) => [
-                { role: "system", content: "你是一个小红书爆款文案写作专家。写一篇吸引人的小红书风格笔记，包含：吸引眼球的标题、emoji表情、分段清晰的内容、相关标签。语言活泼亲切。" },
-                { role: "user", content: `请写一篇关于"${topic}"的小红书笔记` }
+                { role: "system", content: "浣犳槸涓€涓皬绾功鐖嗘鏂囨鍐欎綔涓撳銆傚啓涓€绡囧惛寮曚汉鐨勫皬绾功椋庢牸绗旇锛屽寘鍚細鍚稿紩鐪肩悆鐨勬爣棰樸€乪moji琛ㄦ儏銆佸垎娈垫竻鏅扮殑鍐呭銆佺浉鍏虫爣绛俱€傝瑷€娲绘臣浜插垏銆? },
+                { role: "user", content: `璇峰啓涓€绡囧叧浜?${topic}"鐨勫皬绾功绗旇` }
             ],
             "product-desc": (product) => [
-                { role: "system", content: "你是一个电商文案专家。写产品描述要突出卖点、解决用户痛点、包含使用场景。" },
-                { role: "user", content: `请为"${product}"写一段电商产品描述` }
+                { role: "system", content: "浣犳槸涓€涓數鍟嗘枃妗堜笓瀹躲€傚啓浜у搧鎻忚堪瑕佺獊鍑哄崠鐐广€佽В鍐崇敤鎴风棝鐐广€佸寘鍚娇鐢ㄥ満鏅€? },
+                { role: "user", content: `璇蜂负"${product}"鍐欎竴娈电數鍟嗕骇鍝佹弿杩癭 }
             ],
             article: (topic) => [
-                { role: "system", content: "你是一个专业文章写手。写一篇结构清晰、内容充实的公众号风格文章。" },
-                { role: "user", content: `请写一篇关于"${topic}"的公众号文章` }
+                { role: "system", content: "浣犳槸涓€涓笓涓氭枃绔犲啓鎵嬨€傚啓涓€绡囩粨鏋勬竻鏅般€佸唴瀹瑰厖瀹炵殑鍏紬鍙烽鏍兼枃绔犮€? },
+                { role: "user", content: `璇峰啓涓€绡囧叧浜?${topic}"鐨勫叕浼楀彿鏂囩珷` }
             ],
             "short-video": (topic) => [
-                { role: "system", content: "你是一个短视频脚本专家。写15-60秒的短视频脚本，包含开场hook、主要内容、结尾引导互动。" },
-                { role: "user", content: `请写一个关于"${topic}"的短视频脚本` }
+                { role: "system", content: "浣犳槸涓€涓煭瑙嗛鑴氭湰涓撳銆傚啓15-60绉掔殑鐭棰戣剼鏈紝鍖呭惈寮€鍦篽ook銆佷富瑕佸唴瀹广€佺粨灏惧紩瀵间簰鍔ㄣ€? },
+                { role: "user", content: `璇峰啓涓€涓叧浜?${topic}"鐨勭煭瑙嗛鑴氭湰` }
             ],
             seo: (keyword) => [
-                { role: "system", content: "你是一个SEO内容专家。写一篇搜索引擎优化的文章，自然融入关键词，结构清晰。" },
-                { role: "user", content: `请写一篇围绕关键词"${keyword}"的SEO优化文章` }
+                { role: "system", content: "浣犳槸涓€涓猄EO鍐呭涓撳銆傚啓涓€绡囨悳绱㈠紩鎿庝紭鍖栫殑鏂囩珷锛岃嚜鐒惰瀺鍏ュ叧閿瘝锛岀粨鏋勬竻鏅般€? },
+                { role: "user", content: `璇峰啓涓€绡囧洿缁曞叧閿瘝"${keyword}"鐨凷EO浼樺寲鏂囩珷` }
             ],
             translate: (text, lang) => [
-                { role: "system", content: `你是一个专业翻译。将文本翻译成${lang}，保持原意和语气，自然流畅。` },
+                { role: "system", content: `浣犳槸涓€涓笓涓氱炕璇戙€傚皢鏂囨湰缈昏瘧鎴?{lang}锛屼繚鎸佸師鎰忓拰璇皵锛岃嚜鐒舵祦鐣呫€俙 },
                 { role: "user", content: text }
             ],
             custom: (prompt) => [
-                { role: "system", content: "你是一个AI助手，请根据用户的要求完成创作。" },
+                { role: "system", content: "浣犳槸涓€涓狝I鍔╂墜锛岃鏍规嵁鐢ㄦ埛鐨勮姹傚畬鎴愬垱浣溿€? },
                 { role: "user", content: prompt }
             ]
         };
 
         const TOOLS = {
-            'xiaohongshu': { name: '小红书文案', icon: '📕' },
-            'product-desc': { name: '电商产品描述', icon: '🏷️' },
-            'article': { name: '公众号文章', icon: '📰' },
-            'short-video': { name: '短视频脚本', icon: '🎬' },
-            'seo': { name: 'SEO优化文章', icon: '🔍' },
-            'translate': { name: '翻译', icon: '🌐' },
-            'custom': { name: '自由创作', icon: '✏️' }
+            'xiaohongshu': { name: '灏忕孩涔︽枃妗?, icon: '馃摃' },
+            'product-desc': { name: '鐢靛晢浜у搧鎻忚堪', icon: '馃彿锔? },
+            'article': { name: '鍏紬鍙锋枃绔?, icon: '馃摪' },
+            'short-video': { name: '鐭棰戣剼鏈?, icon: '馃幀' },
+            'seo': { name: 'SEO浼樺寲鏂囩珷', icon: '馃攳' },
+            'translate': { name: '缈昏瘧', icon: '馃寪' },
+            'custom': { name: '鑷敱鍒涗綔', icon: '鉁忥笍' }
         };
         let currentTool = 'xiaohongshu';
 
@@ -138,12 +136,12 @@
             const vip = localStorage.getItem('vip_expiry');
             const navStatus = document.getElementById('navStatus');
             if (vip && Date.now() < parseInt(vip)) {
-                navStatus.innerHTML = '⭐ VIP';
+                navStatus.innerHTML = '猸?VIP';
                 navStatus.style.background = '#6c5ce7';
                 navStatus.style.color = 'white';
                 window.isVIP = true;
             } else {
-                navStatus.innerHTML = '🔓 免费模式';
+                navStatus.innerHTML = '馃敁 鍏嶈垂妯″紡';
                 navStatus.style.background = '#f0f0f0';
                 navStatus.style.color = '';
                 window.isVIP = false;
@@ -153,7 +151,7 @@
 
         function updateFreeCount() {
             const el = document.getElementById('freeCount');
-            if (window.isVIP) { el.textContent = '∞'; return; }
+            if (window.isVIP) { el.textContent = '鈭?; return; }
             const today = new Date().toDateString();
             const uses = parseInt(localStorage.getItem('free_use_writing_' + today) || '0');
             el.textContent = Math.max(0, 3 - uses);
@@ -161,18 +159,18 @@
 
         async function generate() {
             const input = document.getElementById('inputText').value.trim();
-            if (!input) { alert('请输入主题或内容'); return; }
+            if (!input) { alert('璇疯緭鍏ヤ富棰樻垨鍐呭'); return; }
 
             const today = new Date().toDateString();
             const uses = parseInt(localStorage.getItem('free_use_writing_' + today) || '0');
             if (!window.isVIP && uses >= 3) {
-                alert('今日免费次数已用完（3/3）。VIP无限使用！\n\n购买VIP：\n发送 1 USDT (TRC-20)\n到地址: TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p');
+                alert('浠婃棩鍏嶈垂娆℃暟宸茬敤瀹岋紙3/3锛夈€俈IP鏃犻檺浣跨敤锛乗n\n璐拱VIP锛歕n鍙戦€?1 USDT (TRC-20)\n鍒板湴鍧€: TBHxP5cowCPmjcCrCcbjZg2oRRqpW6Dz6p');
                 return;
             }
 
             const btn = document.getElementById('genBtn');
             btn.disabled = true;
-            btn.textContent = '⏳ 生成中...';
+            btn.textContent = '鈴?鐢熸垚涓?..';
             document.getElementById('loader').style.display = 'block';
             document.getElementById('result').style.display = 'none';
 
@@ -185,7 +183,7 @@
                     messages = PROMPTS[currentTool](input);
                 }
 
-                // 通过代理调用API（密钥不在前端暴露）
+                // 閫氳繃浠ｇ悊璋冪敤API锛堝瘑閽ヤ笉鍦ㄥ墠绔毚闇诧級
                 const proxyUrl = DEEPSEEK_CONFIG.proxyUrl || ('https://' + window.location.hostname + ':3001');
                 const res = await fetch(proxyUrl + '/api/ai/proxy', {
                     method: 'POST',
@@ -206,11 +204,11 @@
 
             } catch(e) {
                 document.getElementById('result').style.display = 'block';
-                document.getElementById('result').textContent = '❌ 生成失败：' + e.message;
+                document.getElementById('result').textContent = '鉂?鐢熸垚澶辫触锛? + e.message;
             }
 
             btn.disabled = false;
-            btn.textContent = '🚀 生成内容';
+            btn.textContent = '馃殌 鐢熸垚鍐呭';
             document.getElementById('loader').style.display = 'none';
         }
     </script>

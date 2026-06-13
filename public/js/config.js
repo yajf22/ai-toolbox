@@ -4,7 +4,7 @@ const DEEPSEEK_CONFIG = {
     apiKey: "USE_PROXY",
     model: "deepseek-chat",
     apiUrl: "https://api.deepseek.com/chat/completions",
-    proxyUrl: "PROXY_URL_PLACEHOLDER"
+    proxyUrl: "https://ai-toolbox-proxy.vercel.app"
 };
 
 // ====== Wallet & Payment Info ======
@@ -17,3 +17,4 @@ const WALLET_CONFIG = {
 
 // ====== Usage Limits ======
 const FREE_DAILY_LIMIT = 3;
+
